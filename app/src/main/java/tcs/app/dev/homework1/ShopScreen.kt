@@ -6,6 +6,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import tcs.app.dev.R
+import tcs.app.dev.exercise.university.data.Option
+import tcs.app.dev.exercise.university.data.Universities
+import tcs.app.dev.exercise.university.solution.DetailsScreen
+import tcs.app.dev.exercise.university.solution.SelectionScreen
 import tcs.app.dev.homework1.data.Cart
 import tcs.app.dev.homework1.data.Discount
 import tcs.app.dev.homework1.data.Shop
@@ -34,15 +40,15 @@ import tcs.app.dev.homework1.data.Shop
  *
  * 1) **Shop item tab**
  *    - Show all items offered by the shop, each row displaying:
- *      - item image + name,
- *      - item price,
- *      - an *Add to cart* button.
+ *      - item image + name, ✓
+ *      - item price, ✓
+ *      - an *Add to cart* button. ✓
  *    - Tapping *Add to cart* increases the count of that item in the cart by 1.
  *
  * 2) **Discount tab**
  *    - Show all available discounts with:
- *      - an icon + text describing the discount,
- *      - an *Add to cart* button.
+ *      - an icon + text describing the discount, ✓
+ *      - an *Add to cart* button. ✓
  *    - **Constraint:** each discount can be added **at most once**.
  *      Disable the button (or ignore clicks) for discounts already in the cart.
  *
@@ -66,6 +72,9 @@ import tcs.app.dev.homework1.data.Shop
  *        If you feel fancy you can add a badge to the icon showing the total count (capped e.g. at "99+").
  *      - The cart button is enabled only if the cart contains items. In the Cart screen, show a back
  *        button to return to the shop.
+ *
+ * ExampleShop -> cart icon
+ * Cart
  *
  * - **Bottom bar**:
 *       - In Shop/Discounts, show a 2-tab bottom bar to switch between **Shop** and **Discounts**.
@@ -99,5 +108,38 @@ fun ShopScreen(
     modifier: Modifier = Modifier
 ) {
     var cart by rememberSaveable { mutableStateOf(Cart(shop = shop)) }
+    var screen by rememberSaveable { mutableStateOf("shop") }
 
+    when (val select = screen) {
+        "shop" -> ShopTab(modifier, cart, { l -> cart = l }) {l -> screen = l}
+        "discount" -> DiscountTab(modifier, cart, { l -> cart = l }) {l -> screen = l}
+        "cart" -> CartTab(modifier, cart, { l -> cart = l })  {l -> screen = l}
+        else -> error("This path in ShopScreen should not be reachable.")
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+@Composable
+fun UniversitySelectionApp(modifier: Modifier = Modifier) {
+    var selection: Option? by rememberSaveable { mutableStateOf(null) }
+
+    when (val select = selection) {
+        null -> SelectionScreen(
+            title = stringResource(R.string.university_selection),
+            options = Universities,
+            modifier = modifier
+        ) { selected -> selection = selected }
+        else -> DetailsScreen(select, modifier)
+    }
 }
