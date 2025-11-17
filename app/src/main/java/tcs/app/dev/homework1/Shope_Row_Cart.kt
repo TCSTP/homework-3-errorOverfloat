@@ -120,7 +120,12 @@ fun Cart_Row_Item(
                     .padding(horizontal = 16.dp)
             )
 
-            Button(onClick = {(cart - item).let(onSelected)}) {
+            Button(onClick =
+                { (if ((cart.items[item] ?: 1u) == 1u) (cart - item) else {
+                    cart.copy(items = cart.items.filter {it.key != item} + (item to cart.items[item]!! - 1u))
+                }
+                ).let(onSelected) })
+                {
                 Icon(
                     Icons.Outlined.ArrowCircleLeft,
                     contentDescription = null,

@@ -111,7 +111,7 @@ fun ShopScreen(
     val startingCart = Cart(shop = shop)
     var cart by rememberSaveable { mutableStateOf(startingCart) }
     var screen by rememberSaveable { mutableStateOf("shop") }
-    var discountList = availableDiscounts
+    var discountList by rememberSaveable { mutableStateOf(availableDiscounts)  }
 
     when (val select = screen) {
         "shop" -> ShopTab(modifier, cart, { l -> cart = l }) {l -> screen = l}
