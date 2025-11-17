@@ -1,11 +1,18 @@
 package tcs.app.dev.homework1
 
+import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import tcs.app.dev.R
+import tcs.app.dev.exercise.university.data.Option
+import tcs.app.dev.exercise.university.data.Universities
+import tcs.app.dev.exercise.university.solution.DetailsScreen
+import tcs.app.dev.exercise.university.solution.SelectionScreen
 import tcs.app.dev.homework1.data.Cart
 import tcs.app.dev.homework1.data.Discount
 import tcs.app.dev.homework1.data.Shop
@@ -32,40 +39,43 @@ import tcs.app.dev.homework1.data.Shop
  *
  * ## Requirements
  *
- * 1) **Shop item tab**
- *    - Show all items offered by the shop, each row displaying:
- *      - item image + name,
- *      - item price,
- *      - an *Add to cart* button.
- *    - Tapping *Add to cart* increases the count of that item in the cart by 1.
+ * 1) **Shop item tab** ✓
+ *    - Show all items offered by the shop, each row displaying: ✓
+ *      - item image + name, ✓
+ *      - item price, ✓
+ *      - an *Add to cart* button. ✓
+ *    - Tapping *Add to cart* increases the count of that item in the cart by 1. ✓
  *
  * 2) **Discount tab**
- *    - Show all available discounts with:
- *      - an icon + text describing the discount,
- *      - an *Add to cart* button.
+ *    - Show all available discounts with: ✓
+ *      - an icon + text describing the discount, ✓
+ *      - an *Add to cart* button. ✓
  *    - **Constraint:** each discount can be added **at most once**.
  *      Disable the button (or ignore clicks) for discounts already in the cart.
  *
  * 3) **Cart tab**
  *    - Only show the **Cart** tab contents if the cart is **not empty**. Within the cart:
- *      - List each cart item with:
- *        - image + name,
- *        - per-row total (`price * amount`),
+ *      - List each cart item with: ✓
+ *        - image + name, ✓
+ *        - per-row total (`price * amount`), ✓
  *        - an amount selector to **increase/decrease** the quantity (min 0, sensible max like 99).
- *      - Show all selected discounts with a way to **remove** them from the cart.
+ *      - Show all selected discounts with a way to **remove** them from the cart. ✓
  *      - At the bottom, show:
- *        - the **total price** of the cart (items minus discounts),
+ *        - the **total price** of the cart (items minus discounts), ✓
  *        - a **Pay** button that is enabled only when there is at least one item in the cart.
  *      - When **Pay** is pressed, **simulate payment** by clearing the cart and returning to the
  *        **Shop** tab.
  *
  * ## Navigation
  * - **Top bar**:
- *      - Title shows either the shop name or "Cart".
- *      - When not in Cart, show a cart icon.
+ *      - Title shows either the shop name or "Cart".✓
+ *      - When not in Cart, show a cart icon.✓
  *        If you feel fancy you can add a badge to the icon showing the total count (capped e.g. at "99+").
  *      - The cart button is enabled only if the cart contains items. In the Cart screen, show a back
- *        button to return to the shop.
+ *        button to return to the shop. ✓
+ *
+ * ExampleShop -> cart icon
+ * Cart
  *
  * - **Bottom bar**:
 *       - In Shop/Discounts, show a 2-tab bottom bar to switch between **Shop** and **Discounts**.
@@ -98,6 +108,42 @@ fun ShopScreen(
     availableDiscounts: List<Discount>,
     modifier: Modifier = Modifier
 ) {
-    var cart by rememberSaveable { mutableStateOf(Cart(shop = shop)) }
+    val startingCart = Cart(shop = shop)
+    var cart by rememberSaveable { mutableStateOf(startingCart) }
+    var screen by rememberSaveable { mutableStateOf("shop") }
+    var discountList by rememberSaveable { mutableStateOf(availableDiscounts)  }
 
+    when (val select = screen) {
+        "shop" -> ShopTab(modifier, cart, { l -> cart = l }) {l -> screen = l}
+        "discount" -> DiscountTab(modifier, cart, { l -> cart = l }, discountList, {l -> discountList = l}) {l -> screen = l}
+        "cart" -> CartTab(modifier, cart, startingCart, availableDiscounts,{ l -> cart = l }, discountList, {l -> discountList = l})  {l -> screen = l}
+        else -> error("This path in ShopScreen should not be reachable.")
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@Composable
+fun UniversitySelectionApp(modifier: Modifier = Modifier) {
+    var selection: Option? by rememberSaveable { mutableStateOf(null) }
+
+    when (val select = selection) {
+        null -> SelectionScreen(
+            title = stringResource(R.string.university_selection),
+            options = Universities,
+            modifier = modifier
+        ) { selected -> selection = selected }
+        else -> DetailsScreen(select, modifier)
+    }
 }
