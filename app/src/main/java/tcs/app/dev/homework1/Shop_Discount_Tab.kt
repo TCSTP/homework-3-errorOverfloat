@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,6 +36,8 @@ import tcs.app.dev.ui.theme.AppTheme
 @Preview(showBackground = true)
 @Composable
 fun DiscountTab(modifier: Modifier = Modifier, cart : Cart = Cart(ExampleShop), lambdaCart: (Cart) -> Unit = {}, lambda: (String) -> Unit = {}) {
+    val enableButton = cart.itemCount > 0u
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -46,7 +49,14 @@ fun DiscountTab(modifier: Modifier = Modifier, cart : Cart = Cart(ExampleShop), 
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                Button(onClick = {"cart".let(lambda)}) {
+                Button(
+                    onClick = {"cart".let(lambda)},
+                    enabled = enableButton,
+                    modifier = modifier.then(
+
+                        if (enableButton) Modifier else Modifier.alpha(0.5F)
+
+                    )) {
                 Icon(
                     Icons.Outlined.ShoppingCart,
                     contentDescription = null,

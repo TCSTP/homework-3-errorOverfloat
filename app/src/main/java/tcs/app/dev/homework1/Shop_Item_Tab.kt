@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,7 +40,7 @@ import tcs.app.dev.ui.theme.AppTheme
 @Preview(showBackground = true)
 @Composable
 fun ShopTab(modifier: Modifier = Modifier, cart : Cart = Cart(ExampleShop), lambdaCart: (Cart) -> Unit = {}, lambda: (String) -> Unit = {}) {
-    //var cartVar: Cart by remember { mutableStateOf(cart) }
+    val enableButton = cart.itemCount > 0u
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -53,9 +54,14 @@ fun ShopTab(modifier: Modifier = Modifier, cart : Cart = Cart(ExampleShop), lamb
                 horizontalArrangement = Arrangement.Center
             ) {
                 Button(onClick = {
-                    //cartVar.let(lambdaCart)
                     "cart".let(lambda)
-                }) {
+                },
+                    enabled = enableButton,
+                    modifier = modifier.then(
+
+                        if (enableButton) Modifier else Modifier.alpha(0.5F)
+
+                    )) {
                     Icon(
                         Icons.Outlined.ShoppingCart,
                         contentDescription = null,

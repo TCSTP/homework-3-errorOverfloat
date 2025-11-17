@@ -1,7 +1,9 @@
 package tcs.app.dev.homework1
 
+import android.widget.Button
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,8 +18,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
@@ -51,6 +56,7 @@ fun Cart_Row_Item(
         count = { modifier -> Text((cart.items[item]?:0u).toString(), modifier = modifier) },
         cart = cart,
         item = item,
+        enableRightButton = (cart.items[item]?:0u) < 12u,
         selected = selected,
         onSelected = onSelected,
         modifier = modifier
@@ -65,6 +71,7 @@ fun Cart_Row_Item(
     count: @Composable (Modifier) -> Unit,
     cart: Cart,
     item: Item,
+    enableRightButton: Boolean,
     selected: Boolean,
     modifier: Modifier = Modifier,
     onSelected: (Cart) -> Unit = {}
@@ -128,7 +135,16 @@ fun Cart_Row_Item(
                         .padding(horizontal = 16.dp)
                 )
 
-                Button(onClick = {(cart + item).let(onSelected)}) {
+
+                Button(
+                    onClick = {(cart + item).let(onSelected)},
+                    enabled = enableRightButton,
+                    modifier = modifier.then(
+
+                            if (enableRightButton) Modifier else Modifier.alpha(0.5F)
+
+                            )
+                ) {
                     Icon(
                         Icons.Outlined.ArrowCircleRight,
                         contentDescription = null,

@@ -1,5 +1,6 @@
 package tcs.app.dev.homework1
 
+import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,15 +39,15 @@ import tcs.app.dev.homework1.data.Shop
  *
  * ## Requirements
  *
- * 1) **Shop item tab**
- *    - Show all items offered by the shop, each row displaying:
+ * 1) **Shop item tab** ✓
+ *    - Show all items offered by the shop, each row displaying: ✓
  *      - item image + name, ✓
  *      - item price, ✓
  *      - an *Add to cart* button. ✓
- *    - Tapping *Add to cart* increases the count of that item in the cart by 1.
+ *    - Tapping *Add to cart* increases the count of that item in the cart by 1. ✓
  *
  * 2) **Discount tab**
- *    - Show all available discounts with:
+ *    - Show all available discounts with: ✓
  *      - an icon + text describing the discount, ✓
  *      - an *Add to cart* button. ✓
  *    - **Constraint:** each discount can be added **at most once**.
@@ -54,24 +55,24 @@ import tcs.app.dev.homework1.data.Shop
  *
  * 3) **Cart tab**
  *    - Only show the **Cart** tab contents if the cart is **not empty**. Within the cart:
- *      - List each cart item with:
- *        - image + name,
- *        - per-row total (`price * amount`),
+ *      - List each cart item with: ✓
+ *        - image + name, ✓
+ *        - per-row total (`price * amount`), ✓
  *        - an amount selector to **increase/decrease** the quantity (min 0, sensible max like 99).
- *      - Show all selected discounts with a way to **remove** them from the cart.
+ *      - Show all selected discounts with a way to **remove** them from the cart. ✓
  *      - At the bottom, show:
- *        - the **total price** of the cart (items minus discounts),
+ *        - the **total price** of the cart (items minus discounts), ✓
  *        - a **Pay** button that is enabled only when there is at least one item in the cart.
  *      - When **Pay** is pressed, **simulate payment** by clearing the cart and returning to the
  *        **Shop** tab.
  *
  * ## Navigation
  * - **Top bar**:
- *      - Title shows either the shop name or "Cart".
- *      - When not in Cart, show a cart icon.
+ *      - Title shows either the shop name or "Cart".✓
+ *      - When not in Cart, show a cart icon.✓
  *        If you feel fancy you can add a badge to the icon showing the total count (capped e.g. at "99+").
  *      - The cart button is enabled only if the cart contains items. In the Cart screen, show a back
- *        button to return to the shop.
+ *        button to return to the shop. ✓
  *
  * ExampleShop -> cart icon
  * Cart
@@ -117,6 +118,7 @@ fun ShopScreen(
         else -> error("This path in ShopScreen should not be reachable.")
     }
 }
+
 
 
 

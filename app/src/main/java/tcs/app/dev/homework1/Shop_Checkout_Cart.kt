@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,6 +38,7 @@ fun CheckoutPrice(
         title = { modifier -> Text(String.format(stringResource(R.string.total_price), (cart.price).toString()), modifier = modifier) },
         lambdaCart = lambdaCart,
         lambda = lambda,
+        enableButton = cart.itemCount > 0u,
         selected = selected,
         modifier = modifier
     )
@@ -47,6 +49,7 @@ fun Row(
     title: @Composable (Modifier) -> Unit,
     lambdaCart: (Cart) -> Unit = {},
     lambda: (String) -> Unit = {},
+    enableButton: Boolean,
     selected: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -85,8 +88,16 @@ fun Row(
 
             Button(onClick = {
                 Cart(ExampleShop).let(lambdaCart)
-                "shop".let(lambda)
-            }) {
+                "shop".let(lambda
+                )
+            },
+                enabled = enableButton,
+                modifier = modifier.then(
+
+                    if (enableButton) Modifier else Modifier.alpha(0.5F)
+
+                )
+                ) {
                 Icon(
                     Icons.Outlined.Paid,
                     contentDescription = null,
