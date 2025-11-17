@@ -29,13 +29,20 @@ import androidx.compose.ui.unit.dp
 import tcs.app.dev.R
 import tcs.app.dev.exercise.university.data.Option
 import tcs.app.dev.homework1.data.Cart
+import tcs.app.dev.homework1.data.Discount
 import tcs.app.dev.homework1.data.MockData.ExampleDiscounts
 import tcs.app.dev.homework1.data.MockData.ExampleShop
 import tcs.app.dev.ui.theme.AppTheme
 
 @Preview(showBackground = true)
 @Composable
-fun DiscountTab(modifier: Modifier = Modifier, cart : Cart = Cart(ExampleShop), lambdaCart: (Cart) -> Unit = {}, lambda: (String) -> Unit = {}) {
+fun DiscountTab(
+    modifier: Modifier = Modifier,
+    cart : Cart = Cart(ExampleShop),
+    lambdaCart: (Cart) -> Unit = {},
+    discountList: List<Discount> = ExampleDiscounts,
+    lambdaDiscount: (List<Discount>) -> Unit = {},
+    lambda: (String) -> Unit = {}) {
     val enableButton = cart.itemCount > 0u
 
     Scaffold(
@@ -118,10 +125,12 @@ fun DiscountTab(modifier: Modifier = Modifier, cart : Cart = Cart(ExampleShop), 
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        items(ExampleDiscounts) { option ->
+        items(discountList) { option ->
             Row(
                 title = option,
                 cart = cart,
+                discountList = discountList,
+                lambdaDiscount = lambdaDiscount,
                 onSelected = lambdaCart,
                 selected = false
             )

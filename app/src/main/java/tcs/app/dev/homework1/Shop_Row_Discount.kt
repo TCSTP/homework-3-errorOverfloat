@@ -39,7 +39,9 @@ fun Row(
     selected: Boolean,
     modifier: Modifier = Modifier,
     cart: Cart,
-    onSelected: (Cart) -> Unit = {}
+    onSelected: (Cart) -> Unit = {},
+    discountList: List<Discount> = ExampleDiscounts,
+    lambdaDiscount: (List<Discount>) -> Unit = {}
 ) {
     Row(
         image = if (title.toString()[0] == 'P') Icons.Outlined.Percent
@@ -50,7 +52,9 @@ fun Row(
         selected = selected,
         modifier = modifier,
         cart = cart,
-        onSelected = onSelected
+        onSelected = onSelected,
+        discountList = discountList,
+        lambdaDiscount = lambdaDiscount
     )
 }
 
@@ -62,7 +66,9 @@ fun Row(
     selected: Boolean,
     modifier: Modifier = Modifier,
     cart: Cart,
-    onSelected: (Cart) -> Unit = {}
+    onSelected: (Cart) -> Unit = {},
+    discountList: List<Discount>,
+    lambdaDiscount: (List<Discount>) -> Unit = {}
 ) {
     val border = BorderStroke(
         width = 1.dp,
@@ -102,7 +108,10 @@ fun Row(
                     .padding(horizontal = 16.dp)
             )
 
-            Button(onClick = {(if (!selected) cart + discount else cart - discount).let(onSelected)}) {
+            Button(onClick = {
+                (if (!selected) discountList.filter { it != discount } else discountList + discount).let(lambdaDiscount)
+                (if (!selected) cart + discount else cart - discount).let(onSelected)
+            }) {
                 Icon(
                     (if (selected) Icons.Outlined.RemoveShoppingCart else Icons.Outlined.AddShoppingCart),
                     contentDescription = null,
@@ -113,6 +122,7 @@ fun Row(
         }
     }
 }
+
 
 
 @Composable
@@ -129,7 +139,7 @@ fun RadioRowSelectedPreviewDiscount0() {
         Row(
             title = ExampleDiscounts[0],
             selected = true,
-            cart = Cart(ExampleShop)
+            cart = Cart(ExampleShop),
         )
     }
 }

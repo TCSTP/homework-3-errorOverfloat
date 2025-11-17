@@ -108,13 +108,15 @@ fun ShopScreen(
     availableDiscounts: List<Discount>,
     modifier: Modifier = Modifier
 ) {
-    var cart by rememberSaveable { mutableStateOf(Cart(shop = shop)) }
+    val startingCart = Cart(shop = shop)
+    var cart by rememberSaveable { mutableStateOf(startingCart) }
     var screen by rememberSaveable { mutableStateOf("shop") }
+    var discountList = availableDiscounts
 
     when (val select = screen) {
         "shop" -> ShopTab(modifier, cart, { l -> cart = l }) {l -> screen = l}
-        "discount" -> DiscountTab(modifier, cart, { l -> cart = l }) {l -> screen = l}
-        "cart" -> CartTab(modifier, cart, { l -> cart = l })  {l -> screen = l}
+        "discount" -> DiscountTab(modifier, cart, { l -> cart = l }, discountList, {l -> discountList = l}) {l -> screen = l}
+        "cart" -> CartTab(modifier, cart, startingCart, availableDiscounts,{ l -> cart = l }, discountList, {l -> discountList = l})  {l -> screen = l}
         else -> error("This path in ShopScreen should not be reachable.")
     }
 }

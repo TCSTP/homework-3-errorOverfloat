@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import tcs.app.dev.R
 import tcs.app.dev.homework1.data.Cart
+import tcs.app.dev.homework1.data.Discount
 import tcs.app.dev.homework1.data.Discount.*
 import tcs.app.dev.homework1.data.Item
 import tcs.app.dev.homework1.data.MockData.ExampleDiscounts
@@ -41,7 +42,12 @@ fun CartTab(
         mapOf(Item("Apple") to 5u),
         listOf(Fixed(2u.euro))
     ),
-    lambdaCart: (Cart) -> Unit = {}, lambda: (String) -> Unit = {}) {
+    startingCart: Cart = Cart(ExampleShop),
+    startingDiscount: List<Discount> = ExampleDiscounts,
+    lambdaCart: (Cart) -> Unit = {},
+    discountList: List<Discount> = ExampleDiscounts,
+    lambdaDiscount: (List<Discount>) -> Unit = {},
+    lambda: (String) -> Unit = {}) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -74,6 +80,7 @@ fun CartTab(
         bottomBar = {
             CheckoutPrice(
                 cart = cart,
+                lambdaDiscount = lambdaDiscount,
                 lambdaCart = lambdaCart,
                 lambda = lambda,
                 selected = true,
@@ -101,6 +108,8 @@ fun CartTab(
                 Row(
                     title = option,
                     cart = cart,
+                    discountList = discountList,
+                    lambdaDiscount = lambdaDiscount,
                     onSelected = lambdaCart,
                     selected = true
                 )

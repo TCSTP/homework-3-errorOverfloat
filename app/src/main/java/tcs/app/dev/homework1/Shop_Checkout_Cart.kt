@@ -23,12 +23,17 @@ import androidx.compose.ui.unit.dp
 import tcs.app.dev.homework1.data.Euro
 import tcs.app.dev.R
 import tcs.app.dev.homework1.data.Cart
+import tcs.app.dev.homework1.data.Discount
+import tcs.app.dev.homework1.data.MockData.ExampleDiscounts
 import tcs.app.dev.homework1.data.MockData.ExampleShop
 import tcs.app.dev.ui.theme.AppTheme
 
 @Composable
 fun CheckoutPrice(
     cart: Cart,
+    originalCart: Cart = Cart(ExampleShop),
+    discountList: List<Discount> = ExampleDiscounts,
+    lambdaDiscount: (List<Discount>) -> Unit = {},
     lambdaCart: (Cart) -> Unit = {},
     lambda: (String) -> Unit = {},
     selected: Boolean,
@@ -37,7 +42,10 @@ fun CheckoutPrice(
     Row(
         title = { modifier -> Text(String.format(stringResource(R.string.total_price), (cart.price).toString()), modifier = modifier) },
         lambdaCart = lambdaCart,
+        originalCart = originalCart,
+        discountList = discountList,
         lambda = lambda,
+        lambdaDiscount = lambdaDiscount,
         enableButton = cart.itemCount > 0u,
         selected = selected,
         modifier = modifier
@@ -47,6 +55,9 @@ fun CheckoutPrice(
 @Composable
 fun Row(
     title: @Composable (Modifier) -> Unit,
+    originalCart: Cart,
+    discountList: List<Discount>,
+    lambdaDiscount: (List<Discount>) -> Unit = {},
     lambdaCart: (Cart) -> Unit = {},
     lambda: (String) -> Unit = {},
     enableButton: Boolean,
@@ -87,9 +98,9 @@ fun Row(
             )
 
             Button(onClick = {
-                Cart(ExampleShop).let(lambdaCart)
-                "shop".let(lambda
-                )
+                discountList.let(lambdaDiscount)
+                originalCart.let(lambdaCart)
+                "shop".let(lambda)
             },
                 enabled = enableButton,
                 modifier = modifier.then(
